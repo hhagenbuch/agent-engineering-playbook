@@ -234,3 +234,10 @@ acceptance criteria written before the work so the bar cannot move to meet it.
 The method is not complicated. It is just unfashionable to apply it to a worker
 that types this fast. Do it anyway. The speed is the reason the discipline
 matters more, not less.
+
+---
+
+*This repository was built the way it describes. Its commit history runs
+scaffold → essay → runbooks → case study → polish, in that order — the spec and
+the frame before the evidence, the evidence before the flourish. A repo arguing
+for process should show its own.*
