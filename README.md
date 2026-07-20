@@ -216,9 +216,32 @@ fixed in the open.
   then the fix was checked against every other place that parsed the same shape,
   not just the one that failed.
 
-The through-line: none of these are caught by a better prompt. They are caught by
-a review that assumes the work is wrong until it proves otherwise, and by
-acceptance criteria written before the work so the bar cannot move to meet it.
+- **A stale local `main` dragging unpushed commits into an unrelated squash.**
+  The only failure mode here that is mechanical rather than editorial, and the
+  only one that bit twice. When several agents share one working copy, `main` is
+  not what the remote says it is: it can hold another agent's unmerged commits,
+  and `git checkout -b` can silently no-op and leave you on their branch. Anything
+  branched from that state inherits work nobody intended to ship, and a squash
+  merge presents the whole bundle under *your* PR's title. First incident: a
+  Spring Boot 4 migration built on top of a stranger's unmerged feature branch —
+  caught only because a module's test count moved 11 to 13, which a passing build
+  would otherwise have hidden. Second: a README-only PR
+  ([mcp-pact #16](https://github.com/hhagenbuch/mcp-pact/pull/16)) carried six
+  unrelated go-to-market drafts onto a public repo, publishing them as a side
+  effect of a documentation change; cleaned up in
+  [#21](https://github.com/hhagenbuch/mcp-pact/pull/21). Mitigation is mechanical,
+  not vigilance: **always cut branches from the remote, never from local `main`**
+  — `git fetch && git switch -c feature/x origin/main` — assert the branch
+  actually took before doing any work, and treat a changed test count as a
+  wrong-base alarm rather than noise.
+
+The through-line for most of these: none are caught by a better prompt. They are
+caught by a review that assumes the work is wrong until it proves otherwise, and
+by acceptance criteria written before the work so the bar cannot move to meet it.
+The last one is the exception that proves the rule's limit — no amount of review
+of the *diff* catches a bad base, because every line in it is correct. That class
+needs a mechanical guarantee instead: make the wrong thing impossible to express,
+rather than asking a reviewer to notice it.
 
 ---
 
