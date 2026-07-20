@@ -40,7 +40,8 @@ was fixed.
 | 5 | [#5](https://github.com/hhagenbuch/castaway/pull/5) Phase 4 | Verified offline demo; local-model benchmark; written design decisions | — |
 | 6 | **[#6](https://github.com/hhagenbuch/castaway/pull/6) Review cycle 1: orphaned-outbox sweep** | `ORPHANED` terminal state; startup sweep; documented at-most-once | **A crash between `REVALIDATED` and `EXECUTED` stranded an entry the reconciler never looked at again — invisible forever** |
 | 7 | **[#7](https://github.com/hhagenbuch/castaway/pull/7) Review cycle 2: measured benchmark** | Real `llama3.1:8b` and corrected `qwen3:8b` numbers from actual runs | **The benchmark table had a placeholder row — replaced with real measured data, and the finding changed the recommendation** |
-| 9 | [#9](https://github.com/hhagenbuch/castaway/pull/9) | Spring Boot 3.5.12 + Java 25 (LTS) | Platform currency |
+| 8 | [#8](https://github.com/hhagenbuch/castaway/pull/8) Target Java 25 (LTS) — **closed, not merged** | — (superseded) | **The bump didn't hold on its own.** Java 25 alone failed against the then-current Spring Boot, whose bundled ASM rejected class-file major version 69. Rather than patch around it, the PR was closed and replaced by #9, which moves the platform and the language together. |
+| 9 | [#9](https://github.com/hhagenbuch/castaway/pull/9) | Spring Boot 3.5.12 + Java 25 (LTS) | Platform currency — the superseding change |
 
 ## Review cycle 1: the invisible crash window
 
