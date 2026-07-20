@@ -108,6 +108,23 @@ a review finding:
   have flagged — the worst failure mode for a testing tool, because it launders
   false confidence. Every hole was closed and given a test.
 
+The best example of the discipline paying off is one where the review was
+*overruled*. Triage of a dependency bump flagged one update as the risky
+one — bumping fabric8's CRD generator while the Kubernetes client stayed pinned by
+the operator SDK would put two major versions on a single classpath — and
+recommended declining it. It was merged anyway, along with 26 siblings, each
+individually green. The predicted skew materialised exactly as described, and was
+caught by regenerating the CRDs and diffing them byte-for-byte before anything
+shipped wrong. The revert
+([agent-operator #18](https://github.com/hhagenbuch/agent-operator/pull/18)) showed
+the generated CRDs were *identical* at both versions — the bump bought nothing and
+cost classpath consistency — and the follow-up
+([#23](https://github.com/hhagenbuch/agent-operator/pull/23)) turned the manual
+check into a CI guard and made the bad bump unproposable. That full arc —
+**judgment call → prediction → confirmation → mechanical guard** — is the point: a
+review that only catches the defect leaves you to catch it again next quarter; one
+that ends in a gate retires the whole class of error.
+
 The pattern is always the same: a finding is stated plainly, the fix is made,
 the fix is verified, and only then does it merge. A review that produces no
 written findings and blocks nothing is not a review. It is a signature.
