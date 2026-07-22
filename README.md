@@ -270,6 +270,9 @@ rather than asking a reviewer to notice it.
   design document through phase PRs, two review cycles, and a measured benchmark
   whose finding validated the architecture.
 - [`docs/TEMPLATE.md`](docs/TEMPLATE.md) — a blank runbook to copy.
+- [The agent engineering standards](https://github.com/hhagenbuch/agent-medic/blob/main/docs/STANDARDS.md)
+  — the seven rules the platform builds by, hosted in agent-medic (the repo
+  that programmatically edits prompts, so the rules bind it hardest).
 
 The method is not complicated. It is just unfashionable to apply it to a worker
 that types this fast. Do it anyway. The speed is the reason the discipline
