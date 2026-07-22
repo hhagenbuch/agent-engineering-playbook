@@ -168,6 +168,40 @@ guess is a feature.
 
 ---
 
+## The layer above: coordinating many agents
+
+Everything above is a method for running **one** agent through **one** runbook —
+a spec, a design gate, phased PRs, a review at each seam. It sequences. It is
+silent on the failure that shows up the moment you run two sessions on one
+project at once, which is exactly how this portfolio's two worst incidents
+happened: a session that branched from a stale local `main` and squash-merged
+another session's unpushed commits, and a session that published drafts another
+was still writing. Two uncoordinated sessions, one project, both times.
+
+[`conductor`](https://github.com/hhagenbuch/conductor)
+([chapter 8](runbooks/08-conductor.md)) is the layer that closes that gap: a
+bus so sessions see and message each other, **leases** so a conflicting write is
+blocked with a message naming the holder, consented redacted **briefings** so a
+joining helper gets context without raw transcript, and **`assist`** so one
+command spawns a briefed helper that works in its own worktree and integrates
+via PR. It reuses this platform's own parts — agent-blackbox's redaction as a
+library, mcp-pact to contract-test its own bus, agent-medic's authority boundary
+(schedule, inform, block — never edit, merge, or approve).
+
+It was dogfooded on real work: two of the remaining RFCs were authored as two
+coordinated sessions, and the
+[case study](https://github.com/hhagenbuch/conductor/blob/main/docs/CASE-STUDY.md)
+reports the result the way this playbook demands — including the parts that
+deflate the pitch. Both RFCs finished in the time of the slower one (~23% faster
+than back-to-back, unit of work doubled), a shared-resource collision was
+prevented by a lease and a message, **and** the study writes down that for
+cross-repo work the leases were mostly informational and that `assist` turned
+out to be intra-repo, not the cross-repo tool the runbook assumed. A coordinator
+that reports where it did not help is applying the platform's oldest doctrine —
+honesty over silent degradation — to the tool that sits above all the others.
+
+---
+
 ## What transfers to managing people, and what does not
 
 Most of it transfers, which is the uncomfortable and useful part.
@@ -264,8 +298,10 @@ rather than asking a reviewer to notice it.
 
 ## Read the receipts
 
-- [`runbooks/`](runbooks/) — the seven specifications, sanitized, each headed
-  with what it produced and what its review cycle caught.
+- [`runbooks/`](runbooks/) — the specifications, sanitized, each headed with
+  what it produced and what its review cycle caught. The first seven build one
+  agent through one runbook each; [`08-conductor`](runbooks/08-conductor.md) is
+  the multi-agent layer that lets several run at once.
 - [`docs/CASE-STUDY.md`](docs/CASE-STUDY.md) — one build (castaway) traced from
   design document through phase PRs, two review cycles, and a measured benchmark
   whose finding validated the architecture.
